@@ -1,0 +1,33 @@
+<?xml version ="1.0" encoding="utf-8"?>
+
+<!-- Config file for the game -->
+<config>
+  <name>Application</name>
+  
+  <app>
+    <title>Game development test</title>
+    <organization>UPC</organization>
+  </app>
+
+  <jRenderer>
+    <vsync value="true"/>
+  </jRenderer>
+
+  <jWindow
+   fullscreen="false"
+   borderless="false"
+   resizable="true"
+   fullscreen_window="false"
+   title="GD Test"
+   width="1024"
+   height="768"
+   scale="1"
+   ></jWindow>
+  
+  <jAudio
+  default_music_fade_time="2"
+  music_volume="40"
+  effects_volume="40"
+  ></jAudio>
+
+</config>
