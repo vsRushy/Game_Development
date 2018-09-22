@@ -60,9 +60,9 @@ public:
 	}
 
 	// TODO 3: Create new virtual methods to Load and Save
-	virtual void SaveGame() const
+	virtual void SaveGame(pugi::xml_node&) const
 	{}
-	virtual void LoadGame()
+	virtual void LoadGame(pugi::xml_node&)
 	{}
 
 public:
