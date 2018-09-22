@@ -60,6 +60,10 @@ public:
 	}
 
 	// TODO 3: Create new virtual methods to Load and Save
+	virtual void SaveGame() const
+	{}
+	virtual void LoadGame()
+	{}
 
 public:
 

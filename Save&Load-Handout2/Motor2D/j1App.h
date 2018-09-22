@@ -48,7 +48,7 @@ public:
 	// that can be called anytime, even if they 
 	// will one execute by the very end of the frame
 	// Load / Save
-	void Save();
+	void Save() const;
 	void Load();
 
 private:
@@ -72,8 +72,8 @@ private:
 	bool PostUpdate();
 
 	// TODO 1
-	void SaveCurrentState();
-	void LoadPreviousState();
+	bool SaveCurrentState();
+	bool LoadPreviousState();
 
 public:
 
@@ -100,7 +100,7 @@ private:
 	p2SString			organization;
 
 	// TODO 1
-	bool needs_save, needs_load;
+	mutable bool needs_save, needs_load;
 
 };
 

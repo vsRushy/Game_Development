@@ -247,7 +247,7 @@ bool j1App::CleanUp()
 
 //----------------------------------------
 // TODO 1
-void j1App::Save()
+void j1App::Save() const
 {
 	needs_save = true;
 }
@@ -286,14 +286,14 @@ const char* j1App::GetOrganization() const
 
 //----------------------------------------
 // TODO 1
-void j1App::SaveCurrentState()
+bool j1App::SaveCurrentState()
 {
-
+	return true;
 }
 
-void j1App::LoadPreviousState()
+bool j1App::LoadPreviousState()
 {
-
+	return true;
 }
 
 // TODO 4: Create a simulation of the xml file to read 
