@@ -48,8 +48,6 @@ public:
 	// that can be called anytime, even if they 
 	// will one execute by the very end of the frame
 	// Load / Save
-	void Save() const;
-	void Load();
 
 private:
 
@@ -71,14 +69,10 @@ private:
 	// Call modules after each loop iteration
 	bool PostUpdate();
 
-	// TODO 1
-	bool SaveCurrentState();
-	bool LoadPreviousState();
-
 public:
 
 	// Modules
-	j1Window*           win;
+	j1Window*			win;
 	j1Input*			input;
 	j1Render*			render;
 	j1Textures*			tex;
@@ -98,9 +92,6 @@ private:
 
 	p2SString			title;
 	p2SString			organization;
-
-	// TODO 1
-	mutable bool needs_save, needs_load;
 
 };
 
