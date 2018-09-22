@@ -96,8 +96,10 @@ private:
 	p2SString			organization;
 
 	// TODO 1
+public:
 	bool needs_save, needs_load;
-
+	
+private:
 	// We need to create another xml document and xml node in order to acces and modify the "savegame.xml" document
 	pugi::xml_document savegame_doc;
 	pugi::xml_node savegame_node;
