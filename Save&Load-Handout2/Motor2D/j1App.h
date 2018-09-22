@@ -48,8 +48,6 @@ public:
 	// that can be called anytime, even if they 
 	// will one execute by the very end of the frame
 	// Load / Save
-	void Save() const;
-	void Load();
 
 private:
 
@@ -70,10 +68,6 @@ private:
 
 	// Call modules after each loop iteration
 	bool PostUpdate();
-
-	// TODO 1
-	bool SaveCurrentState();
-	bool LoadPreviousState();
 
 public:
 
@@ -99,12 +93,6 @@ private:
 	p2SString			title;
 	p2SString			organization;
 
-	// TODO 1
-	mutable bool needs_save, needs_load;
-	
-	// We need to create another xml document and xml node in order to acces and modify the "savegame.xml" document
-	pugi::xml_document savegame_doc;
-	pugi::xml_node savegame_node;
 };
 
 extern j1App* App;
