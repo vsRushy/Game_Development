@@ -42,7 +42,7 @@ j1App::~j1App()
 	// release modules
 	p2List_item<j1Module*>* item = modules.end;
 
-	while(item != NULL)
+	while (item != NULL)
 	{
 		RELEASE(item->data);
 		item = item->prev;
@@ -68,12 +68,12 @@ bool j1App::Awake()
 	title.create(app_config.child("title").child_value());
 	organization.create(app_config.child("organization").child_value());
 
-	if(ret == true)
+	if (ret == true)
 	{
 		p2List_item<j1Module*>* item;
 		item = modules.start;
 
-		while(item != NULL && ret == true)
+		while (item != NULL && ret == true)
 		{
 			ret = item->data->Awake(config.child(item->data->name.GetString()));
 			item = item->next;
@@ -90,7 +90,7 @@ bool j1App::Start()
 	p2List_item<j1Module*>* item;
 	item = modules.start;
 
-	while(item != NULL && ret == true)
+	while (item != NULL && ret == true)
 	{
 		ret = item->data->Start();
 		item = item->next;
@@ -105,16 +105,16 @@ bool j1App::Update()
 	bool ret = true;
 	PrepareUpdate();
 
-	if(input->GetWindowEvent(WE_QUIT) == true)
+	if (input->GetWindowEvent(WE_QUIT) == true)
 		ret = false;
 
-	if(ret == true)
+	if (ret == true)
 		ret = PreUpdate();
 
-	if(ret == true)
+	if (ret == true)
 		ret = DoUpdate();
 
-	if(ret == true)
+	if (ret == true)
 		ret = PostUpdate();
 
 	FinishUpdate();
@@ -129,7 +129,7 @@ bool j1App::LoadConfig()
 
 	pugi::xml_parse_result result = config_file.load_file("config.xml");
 
-	if(result == NULL)
+	if (result == NULL)
 	{
 		LOG("Could not load map xml file config.xml. pugi error: %s", result.description());
 		ret = false;
@@ -152,6 +152,14 @@ void j1App::PrepareUpdate()
 void j1App::FinishUpdate()
 {
 	// TODO 1: This is a good place to call load / Save functions
+	if (needs_save)
+	{
+		SaveCurrentState();
+	}
+	else if (needs_load)
+	{
+		LoadPreviousState();
+	}
 
 }
 
@@ -163,11 +171,11 @@ bool j1App::PreUpdate()
 	item = modules.start;
 	j1Module* pModule = NULL;
 
-	for(item = modules.start; item != NULL && ret == true; item = item->next)
+	for (item = modules.start; item != NULL && ret == true; item = item->next)
 	{
 		pModule = item->data;
 
-		if(pModule->active == false) {
+		if (pModule->active == false) {
 			continue;
 		}
 
@@ -185,11 +193,11 @@ bool j1App::DoUpdate()
 	item = modules.start;
 	j1Module* pModule = NULL;
 
-	for(item = modules.start; item != NULL && ret == true; item = item->next)
+	for (item = modules.start; item != NULL && ret == true; item = item->next)
 	{
 		pModule = item->data;
 
-		if(pModule->active == false) {
+		if (pModule->active == false) {
 			continue;
 		}
 
@@ -206,11 +214,11 @@ bool j1App::PostUpdate()
 	p2List_item<j1Module*>* item;
 	j1Module* pModule = NULL;
 
-	for(item = modules.start; item != NULL && ret == true; item = item->next)
+	for (item = modules.start; item != NULL && ret == true; item = item->next)
 	{
 		pModule = item->data;
 
-		if(pModule->active == false) {
+		if (pModule->active == false) {
 			continue;
 		}
 
@@ -227,13 +235,26 @@ bool j1App::CleanUp()
 	p2List_item<j1Module*>* item;
 	item = modules.end;
 
-	while(item != NULL && ret == true)
+	while (item != NULL && ret == true)
 	{
 		ret = item->data->CleanUp();
 		item = item->prev;
 	}
 
 	return ret;
+}
+
+
+//----------------------------------------
+// TODO 1
+void j1App::Save()
+{
+	needs_save = true;
+}
+
+void j1App::Load()
+{
+	needs_load = true;
 }
 
 // ---------------------------------------
@@ -245,7 +266,7 @@ int j1App::GetArgc() const
 // ---------------------------------------
 const char* j1App::GetArgv(int index) const
 {
-	if(index < argc)
+	if (index < argc)
 		return args[index];
 	else
 		return NULL;
@@ -263,6 +284,17 @@ const char* j1App::GetOrganization() const
 	return organization.GetString();
 }
 
+//----------------------------------------
+// TODO 1
+void j1App::SaveCurrentState()
+{
+
+}
+
+void j1App::LoadPreviousState()
+{
+
+}
 
 // TODO 4: Create a simulation of the xml file to read 
 
