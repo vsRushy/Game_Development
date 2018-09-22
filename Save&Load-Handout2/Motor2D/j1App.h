@@ -48,6 +48,8 @@ public:
 	// that can be called anytime, even if they 
 	// will one execute by the very end of the frame
 	// Load / Save
+	void Save();
+	void Load();
 
 private:
 
@@ -93,6 +95,7 @@ private:
 	p2SString			title;
 	p2SString			organization;
 
+	bool needs_save, needs_load;
 };
 
 extern j1App* App;
