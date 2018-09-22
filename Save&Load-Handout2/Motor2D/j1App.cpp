@@ -154,11 +154,11 @@ void j1App::FinishUpdate()
 	// TODO 1: This is a good place to call load / Save functions
 	if (needs_save)
 	{
-
+		Save();
 	}
 	else if (needs_load)
 	{
-
+		Load();
 	}
 }
 
