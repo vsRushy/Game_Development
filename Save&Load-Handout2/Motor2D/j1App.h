@@ -48,6 +48,8 @@ public:
 	// that can be called anytime, even if they 
 	// will one execute by the very end of the frame
 	// Load / Save
+	void Save() const;
+	void Load();
 
 private:
 
@@ -68,6 +70,10 @@ private:
 
 	// Call modules after each loop iteration
 	bool PostUpdate();
+	
+	// TODO 1
+	void RealSave();
+	void RealLoad();
 
 public:
 
@@ -93,6 +99,9 @@ private:
 	p2SString			title;
 	p2SString			organization;
 
+	// TODO 1
+	mutable bool wants_save;
+	bool wants_load;
 };
 
 extern j1App* App;
