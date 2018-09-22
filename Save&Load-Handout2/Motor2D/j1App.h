@@ -71,6 +71,10 @@ private:
 	// Call modules after each loop iteration
 	bool PostUpdate();
 
+	// TODO 1
+	void RealSave();
+	void RealLoad();
+
 public:
 
 	// Modules

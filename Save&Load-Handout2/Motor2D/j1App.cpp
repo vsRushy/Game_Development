@@ -154,11 +154,11 @@ void j1App::FinishUpdate()
 	// TODO 1: This is a good place to call load / Save functions
 	if (needs_save)
 	{
-		
+		RealSave();
 	}
 	else if (needs_load)
 	{
-		
+		RealLoad();
 	}
 }
 
@@ -281,6 +281,15 @@ const char* j1App::GetOrganization() const
 	return organization.GetString();
 }
 
+void j1App::RealSave()
+{
+
+}
+
+void j1App::RealLoad()
+{
+
+}
 
 // TODO 4: Create a simulation of the xml file to read 
 
