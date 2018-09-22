@@ -281,14 +281,16 @@ const char* j1App::GetOrganization() const
 	return organization.GetString();
 }
 
-void j1App::RealSave()
+//-----------------------------------------
+// TODO 1
+void j1App::SaveGame() const
 {
-
+	wants_save = true;
 }
 
-void j1App::RealLoad()
+void j1App::LoadGame()
 {
-
+	wants_load = true;
 }
 
 // TODO 4: Create a simulation of the xml file to read 
