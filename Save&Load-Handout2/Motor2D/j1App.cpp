@@ -295,6 +295,22 @@ void j1App::RealLoad()
 
 // TODO 5: Create a method to actually load an xml file
 // then call all the modules to load themselves
+void j1App::RealLoad()
+{
+	LOG("Loading...");
+	p2List_item<j1Module*>* item;
+	item = modules.start;
+	pugi::xml_parse_result result = save_file.load_file(load_game.GetString());
+
+	while (item != nullptr)
+	{
+		item->data->Load(save.child(item->data->name.GetString()));
+		
+		item = item->next;
+	}
+
+	save_file.reset();
+}
 
 // TODO 7: Create a method to save the current state
 
