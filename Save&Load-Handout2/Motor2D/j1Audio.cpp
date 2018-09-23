@@ -3,7 +3,6 @@
 #include "j1App.h"
 #include "j1FileSystem.h"
 #include "j1Audio.h"
-#include "j1Input.h"
 
 #include "SDL/include/SDL.h"
 #include "SDL_mixer\include\SDL_mixer.h"
