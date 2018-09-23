@@ -3,6 +3,7 @@
 #include "j1App.h"
 #include "j1FileSystem.h"
 #include "j1Audio.h"
+#include "j1Input.h"
 
 #include "SDL/include/SDL.h"
 #include "SDL_mixer\include\SDL_mixer.h"
@@ -31,6 +32,9 @@ bool j1Audio::Awake(pugi::xml_node& config)
 		active = false;
 		ret = true;
 	}
+
+	// Homework
+	music_volume = config.child("volume").attribute("value").as_int();
 
 	// load support for the JPG and PNG image formats
 	int flags = MIX_INIT_OGG;
@@ -176,7 +180,8 @@ bool j1Audio::PlayFx(unsigned int id, int repeat)
 // Homework
 bool j1Audio::Load(pugi::xml_node& data)
 {
-	volume = data.child("volume").attribute("value").as_int();
+	music_volume = data.child("volume").attribute("value").as_int();
+	Mix_VolumeMusic(music_volume);
 
 	return true;
 }
@@ -185,7 +190,15 @@ bool j1Audio::Save(pugi::xml_node& data) const
 {
 	pugi::xml_node audio = data.append_child("volume");
 
-	audio.append_attribute("value") = volume;
+	audio.append_attribute("value") = music_volume;
 
 	return true;
+}
+
+void j1Audio::ControlVolume(bool positive)
+{
+	if (positive && music_volume <= 120)
+		Mix_VolumeMusic(music_volume += 8);
+	else if (!positive && music_volume >= 8)
+		Mix_VolumeMusic(music_volume -= 8);
 }

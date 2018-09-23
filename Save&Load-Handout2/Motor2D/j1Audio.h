@@ -35,10 +35,13 @@ public:
 	// Homework
 	bool Save(pugi::xml_node&) const;
 	bool Load(pugi::xml_node&);
+	
+	// Homework
+	void ControlVolume(bool);
 
 private:
 	// Homework
-	int volume;
+	int music_volume = 50;
 
 	_Mix_Music*			music;
 	p2List<Mix_Chunk*>	fx;
