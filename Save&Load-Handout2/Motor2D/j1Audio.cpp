@@ -172,3 +172,20 @@ bool j1Audio::PlayFx(unsigned int id, int repeat)
 
 	return ret;
 }
+
+// Homework
+bool j1Audio::Load(pugi::xml_node& data)
+{
+	volume = data.child("volume").attribute("value").as_int();
+
+	return true;
+}
+
+bool j1Audio::Save(pugi::xml_node& data) const
+{
+	pugi::xml_node audio = data.append_child("volume");
+
+	audio.append_attribute("value") = volume;
+
+	return true;
+}
