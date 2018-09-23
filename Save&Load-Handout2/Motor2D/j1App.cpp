@@ -244,12 +244,13 @@ bool j1App::CleanUp()
 }
 
 //----------------------------------------
-void j1App::Save() const
+// TODO 1
+void j1App::SaveGame() const
 {
 	wants_save = true;
 }
 
-void j1App::Load()
+void j1App::LoadGame()
 {
 	wants_load = true;
 }
@@ -281,18 +282,6 @@ const char* j1App::GetOrganization() const
 	return organization.GetString();
 }
 
-//-----------------------------------------
-// TODO 1
-void j1App::SaveGame() const
-{
-	wants_save = true;
-}
-
-void j1App::LoadGame()
-{
-	wants_load = true;
-}
-
 // TODO 4: Create a simulation of the xml file to read 
 
 // TODO 5: Create a method to actually load an xml file
@@ -315,4 +304,7 @@ void j1App::RealLoad()
 }
 
 // TODO 7: Create a method to save the current state
+void j1App::RealSave() const
+{
 
+}
