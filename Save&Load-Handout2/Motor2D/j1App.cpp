@@ -318,7 +318,7 @@ bool j1App::RealLoad()
 	}
 	else
 	{
-		LOG("COULDN'T READ THE .XML FILE...", result.description());
+		LOG("COULDN'T READ THE .XML FILE... %s", result.description());
 	}
 
 	wants_load = false;
