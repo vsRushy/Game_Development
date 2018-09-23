@@ -286,53 +286,74 @@ const char* j1App::GetOrganization() const
 
 // TODO 5: Create a method to actually load an xml file
 // then call all the modules to load themselves
-void j1App::RealLoad()
+bool j1App::RealLoad()
 {
 	LOG("Loading...");
+	bool ret = false;
 
 	pugi::xml_document data;
 	pugi::xml_node node;
 
-	pugi::xml_parse_result result = data.load_file("savegame.xml");
-
-	node = data.child("save");
-
-	p2List_item<j1Module*>* item;
-	item = modules.start;
-
-	while (item != nullptr)
+	pugi::xml_parse_result result = data.load_file("Saving.xml");
+	
+	if (result != NULL)
 	{
-		item->data->Load(node.child(item->data->name.GetString()));
-		
-		item = item->next;
+		node = data.child("save");
+
+		p2List_item<j1Module*>* item = modules.start;
+		ret = true;
+
+		while (item != NULL && ret == true)
+		{
+			ret = item->data->Load(node.child(item->data->name.GetString()));
+			item = item->next;
+		}
+
+		data.reset();
+
+		if (ret == true)
+			LOG("LOADING COMPLETE.");
+		else
+			LOG("-----LOADING ERROR-----");
 	}
-	data.reset();
+	else
+	{
+		LOG("COULDN'T READ THE .XML FILE...", result.description());
+	}
 
 	wants_load = false;
+	return ret;
 }
 
 // TODO 7: Create a method to save the current state
-void j1App::RealSave() const
+bool j1App::RealSave() const
 {
 	LOG("Saving...");
+	bool ret = true;
 
 	pugi::xml_document data;
 	pugi::xml_node node;
 
-	node.append_child("save");
+	node = data.append_child("save");
 
 	p2List_item<j1Module*>* item;
 	item = modules.start;
 
-	while (item != NULL)
+	while (item != NULL && ret == true)
 	{
-		item->data->Save(node.append_child(item->data->name.GetString()));
-		
+		ret = item->data->Save(node.append_child(item->data->name.GetString()));
 		item = item->next;
 	}
 
-	data.save_file("savegame.xml");
+	if (ret == true)
+	{
+		data.save_file("Saving.xml");
+		LOG("SAVING COMPLETE.");
+	}
+	else
+		LOG("-----SAVING ERROR-----");
 
 	data.reset();
 	wants_save = false;
+	return ret;
 }

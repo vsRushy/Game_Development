@@ -72,8 +72,8 @@ private:
 	bool PostUpdate();
 	
 	// TODO 1
-	void RealSave() const;
-	void RealLoad();
+	bool RealSave() const;
+	bool RealLoad();
 
 public:
 
