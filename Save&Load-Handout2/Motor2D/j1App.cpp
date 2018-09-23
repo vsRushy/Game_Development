@@ -326,6 +326,8 @@ void j1App::RealSave() const
 		item = item->next;
 	}
 
+	save_file.save_file(save_game.GetString());
+
 	save_file.reset();
 	wants_save = false;
 }

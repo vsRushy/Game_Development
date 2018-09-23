@@ -99,10 +99,10 @@ void j1Render::Load(pugi::xml_node& data)
 // using append_child and append_attribute
 void j1Render::Save(pugi::xml_node& data) const
 {
-	pugi::xml_node camera = data.append_child("camera");
+	pugi::xml_node cam = data.append_child("camera");
 
-	camera.append_attribute("x") = camera.x;
-	camera.append_attribute("y") = camera.y;
+	cam.append_attribute("x") = camera.x;
+	cam.append_attribute("y") = camera.y;
 }
 
 void j1Render::SetBackgroundColor(SDL_Color color)
