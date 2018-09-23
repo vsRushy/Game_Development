@@ -289,6 +289,10 @@ const char* j1App::GetOrganization() const
 void j1App::RealLoad()
 {
 	LOG("Loading...");
+
+	pugi::xml_document save_file;
+	pugi::xml_node save;
+
 	p2List_item<j1Module*>* item;
 	item = modules.start;
 	pugi::xml_parse_result result = save_file.load_file(load_game.GetString());
@@ -301,10 +305,27 @@ void j1App::RealLoad()
 	}
 
 	save_file.reset();
+	wants_load = false;
 }
 
 // TODO 7: Create a method to save the current state
 void j1App::RealSave() const
 {
+	LOG("Saving...");
 
+	pugi::xml_document save_file;
+	pugi::xml_node save;
+
+	save.append_child("save");
+	p2List_item<j1Module*>* item = modules.start;
+
+	while (item != NULL)
+	{
+		item->data->Save(save.append_child(item->data->name.GetString()));
+		
+		item = item->next;
+	}
+
+	save_file.reset();
+	wants_save = false;
 }

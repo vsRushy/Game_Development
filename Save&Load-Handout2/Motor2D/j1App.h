@@ -104,9 +104,6 @@ private:
 	bool wants_load;
 
 	// TODO 5
-	pugi::xml_document save_file;
-	pugi::xml_node save;
-
 	mutable p2SString save_game;
 	p2SString load_game;
 };
