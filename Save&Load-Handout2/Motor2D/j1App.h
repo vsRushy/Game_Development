@@ -102,10 +102,6 @@ private:
 	// TODO 1
 	mutable bool wants_save;
 	bool wants_load;
-
-	// TODO 5
-	mutable p2SString save_game;
-	p2SString load_game;
 };
 
 extern j1App* App;

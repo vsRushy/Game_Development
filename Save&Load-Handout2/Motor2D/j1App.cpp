@@ -290,21 +290,24 @@ void j1App::RealLoad()
 {
 	LOG("Loading...");
 
-	pugi::xml_document save_file;
-	pugi::xml_node save;
+	pugi::xml_document data;
+	pugi::xml_node node;
+
+	pugi::xml_parse_result result = data.load_file("savegame.xml");
+
+	node = data.child("save");
 
 	p2List_item<j1Module*>* item;
 	item = modules.start;
-	pugi::xml_parse_result result = save_file.load_file(load_game.GetString());
 
 	while (item != nullptr)
 	{
-		item->data->Load(save.child(item->data->name.GetString()));
+		item->data->Load(node.child(item->data->name.GetString()));
 		
 		item = item->next;
 	}
+	data.reset();
 
-	save_file.reset();
 	wants_load = false;
 }
 
@@ -313,21 +316,23 @@ void j1App::RealSave() const
 {
 	LOG("Saving...");
 
-	pugi::xml_document save_file;
-	pugi::xml_node save;
+	pugi::xml_document data;
+	pugi::xml_node node;
 
-	save.append_child("save");
-	p2List_item<j1Module*>* item = modules.start;
+	node.append_child("save");
+
+	p2List_item<j1Module*>* item;
+	item = modules.start;
 
 	while (item != NULL)
 	{
-		item->data->Save(save.append_child(item->data->name.GetString()));
+		item->data->Save(node.append_child(item->data->name.GetString()));
 		
 		item = item->next;
 	}
 
-	save_file.save_file(save_game.GetString());
+	data.save_file("savegame.xml");
 
-	save_file.reset();
+	data.reset();
 	wants_save = false;
 }
