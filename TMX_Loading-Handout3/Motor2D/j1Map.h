@@ -11,7 +11,7 @@
 // ----------------------------------------------------
 struct Tileset
 {
-	uint first_grid = 0;
+	uint first_gid = 0;
 	p2SString name = "";
 	uint tile_width = 0;
 	uint tile_height = 0;
@@ -82,7 +82,9 @@ public:
 	// TODO 1: Add your struct for map info as public for now
 	Map_info map_info;
 	// TODO 4
-	Tileset tilset_info;
+	Tileset tileset_info;
+	// We need to support any number of tilesets, so we can create a list for it
+	p2List<Tileset> tilesetList;
 
 private:
 

@@ -44,6 +44,9 @@ bool j1Map::CleanUp()
 	// TODO 2: Make sure you clean up any memory allocated
 	// from tilesets / map
 
+	// As we created a list of <Tileset>, we need to clean it up
+	if (tilesetList.start != nullptr)
+		tilesetList.clear();
 
 	map_file.reset();
 
@@ -134,7 +137,22 @@ bool j1Map::LoadTileset()
 {
 	for (pugi::xml_node tileset = map_file.child("map").child("tileset"); tileset; tileset = tileset.next_sibling("tileset"))
 	{
+		tileset_info.first_gid = tileset.attribute("firstgid").as_int();
+		
+		// Checking name as a string
+		p2SString temp_name = tileset.attribute("name").as_string();
+		tileset_info.name = temp_name;
 
+		tileset_info.tile_width = tileset.attribute("tilewidth").as_int();
+		tileset_info.tile_height = tileset.attribute("tileheight").as_int();
+		tileset_info.spacing = tileset.attribute("spacing").as_int();
+		tileset_info.margin = tileset.attribute("margin").as_int();
+
+		// We add the loaded tileset to the list
+		tilesetList.add(tileset_info);
+
+		// We clear the temporary p2SString variable
+		temp_name.Clear();
 	}
 
 	return true;
