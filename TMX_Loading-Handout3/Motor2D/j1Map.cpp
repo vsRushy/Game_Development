@@ -132,7 +132,10 @@ bool j1Map::LoadMap()
 // TODO 4
 bool j1Map::LoadTileset()
 {
+	for (pugi::xml_node tileset = map_file.child("map").child("tileset"); tileset; tileset = tileset.next_sibling("tileset"))
+	{
 
+	}
 
 	return true;
 }

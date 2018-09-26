@@ -81,6 +81,8 @@ public:
 
 	// TODO 1: Add your struct for map info as public for now
 	Map_info map_info;
+	// TODO 4
+	Tileset tilset;
 
 private:
 
