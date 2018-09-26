@@ -73,7 +73,10 @@ bool j1Map::Load(const char* file_name)
 
 	// TODO 4: Create and call a private function to load a tileset
 	// remember to support more any number of tilesets!
-	
+	if (ret == true)
+	{
+		ret = LoadTileset();
+	}
 
 	if(ret == true)
 	{
@@ -122,6 +125,14 @@ bool j1Map::LoadMap()
 	// We clear the temporary p2SString variables
 	temp_orientation.Clear();
 	temp_render_order.Clear();
+
+	return true;
+}
+
+// TODO 4
+bool j1Map::LoadTileset()
+{
+
 
 	return true;
 }

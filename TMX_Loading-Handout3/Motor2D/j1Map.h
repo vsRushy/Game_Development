@@ -74,6 +74,8 @@ public:
 private:
 	// TODO 3
 	bool LoadMap();
+	// TODO 4
+	bool LoadTileset();
 
 public:
 
