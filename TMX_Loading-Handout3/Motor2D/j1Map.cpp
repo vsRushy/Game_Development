@@ -48,6 +48,8 @@ bool j1Map::CleanUp()
 	if (tilesetList.start != nullptr)
 		tilesetList.clear();
 
+	tileset_info.name.Clear();
+
 	map_file.reset();
 
 	return true;
@@ -104,6 +106,8 @@ bool j1Map::Load(const char* file_name)
 			LOG("name: %s firstgid: %i", item->data.name, item->data.first_gid);
 			LOG("tile width: %i tile height: %i", item->data.tile_width, item->data.tile_height);
 			LOG("spacing: %i margin: %i", item->data.spacing, item->data.margin);
+
+			item = item->next;
 		}
 	}
 
