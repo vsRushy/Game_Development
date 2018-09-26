@@ -73,7 +73,7 @@ public:
 
 private:
 	// TODO 3
-	bool LoadMap(pugi::xml_document&);
+	bool LoadMap();
 
 public:
 

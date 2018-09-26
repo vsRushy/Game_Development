@@ -68,7 +68,7 @@ bool j1Map::Load(const char* file_name)
 	{
 		// TODO 3: Create and call a private function to load and fill
 		// all your map data
-		ret = LoadMap(map_file);
+		ret = LoadMap();
 	}
 
 	// TODO 4: Create and call a private function to load a tileset
@@ -87,15 +87,41 @@ bool j1Map::Load(const char* file_name)
 }
 
 // TODO 3
-bool j1Map::LoadMap(pugi::xml_document& data)
+bool j1Map::LoadMap()
 {
-	map_info.orientation = data.child("map").attribute("orientation"); // as ?
-	map_info.render_order = data.child("map").attribute("renderorder");
-	map_info.width = data.child("map").attribute("width").as_int();
-	map_info.height = data.child("map").attribute("height").as_int();
-	map_info.tile_width = data.child("map").attribute("tilewidth").as_int();
-	map_info.tile_height = data.child("map").attribute("tileheight").as_int();
-	map_info.next_object_id = data.child("map").attribute("nextobjectid").as_int();
+	pugi::xml_node map = map_file.child("map");
+
+	// Checking orientation as a string
+	p2SString temp_orientation = map.attribute("orientation").as_string();
+	if (temp_orientation == "orthogonal")
+		map_info.orientation = ORIENTATION::ORTHOGONAL;
+	if (temp_orientation == "isometric")
+		map_info.orientation = ORIENTATION::ISOMETRIC;
+	if (temp_orientation == "isometric_stepped")
+		map_info.orientation = ORIENTATION::ISOMETRIC_STEPPED;
+	if (temp_orientation == "hexagonal_stepped")
+		map_info.orientation = ORIENTATION::HEXAGONAL_STEPPED;
+
+	// Checking render order as a string
+	p2SString temp_render_order = map.attribute("renderorder").as_string();
+	if (temp_render_order == "right-down")
+		map_info.render_order = RENDER_ORDER::RIGHT_DOWN;
+	if (temp_render_order == "right-up")
+		map_info.render_order = RENDER_ORDER::RIGHT_UP;
+	if (temp_render_order == "left-down")
+		map_info.render_order = RENDER_ORDER::LEFT_DOWN;
+	if (temp_render_order == "left-up")
+		map_info.render_order = RENDER_ORDER::LEFT_UP;
+
+	map_info.width = map.attribute("width").as_int();
+	map_info.height = map.attribute("height").as_int();
+	map_info.tile_width = map.attribute("tilewidth").as_int();
+	map_info.tile_height = map.attribute("tileheight").as_int();
+	map_info.next_object_id = map.attribute("nextobjectid").as_int();
+
+	// We clear the temporary p2SString variables
+	temp_orientation.Clear();
+	temp_render_order.Clear();
 
 	return true;
 }
