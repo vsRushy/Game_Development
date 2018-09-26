@@ -74,6 +74,16 @@ bool j1Map::Load(const char* file_name)
 		ret = LoadMap();
 	}
 
+	// TODO 5
+	if (ret == true)
+	{
+		LOG("Successfully parsed map XML file: %s", file_name);
+		LOG("width: %i height: %i", map_info.width, map_info.height);
+		LOG("tile_width: %i tile_height: %i", map_info.tile_width, map_info.tile_height);
+
+		ret = true;
+	}
+
 	// TODO 4: Create and call a private function to load a tileset
 	// remember to support more any number of tilesets!
 	if (ret == true)
@@ -85,6 +95,16 @@ bool j1Map::Load(const char* file_name)
 	{
 		// TODO 5: LOG all the data loaded
 		// iterate all tilesets and LOG everything
+		p2List_item<Tileset>* item;
+		item = tilesetList.start;
+
+		while (item != NULL)
+		{
+			LOG("Tileset ----");
+			LOG("name: %s firstgid: %i", item->data.name, item->data.first_gid);
+			LOG("tile width: %i tile height: %i", item->data.tile_width, item->data.tile_height);
+			LOG("spacing: %i margin: %i", item->data.spacing, item->data.margin);
+		}
 	}
 
 	map_loaded = ret;
