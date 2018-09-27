@@ -9,7 +9,7 @@
 // TODO 2: Create a struct to hold information for a TileSet
 // Ignore Terrain Types and Tile Types for now, but we want the image!
 // ----------------------------------------------------
-struct Tileset
+struct Tileset_info
 {
 	uint first_gid = 0;
 	p2SString name = "";
@@ -82,15 +82,18 @@ public:
 	// TODO 1: Add your struct for map info as public for now
 	Map_info map_info;
 	// TODO 4
-	Tileset tileset_info;
+	Tileset_info tileset_info;
 	// We need to support any number of tilesets, so we can create a list for it
-	p2List<Tileset> tilesetList;
+	p2List<Tileset_info> tilesetList;
 
 private:
 
 	pugi::xml_document	map_file;
 	p2SString			folder;
 	bool				map_loaded;
+
+	// TODO 6
+	SDL_Texture** tile;
 };
 
 #endif // __j1MAP_H__

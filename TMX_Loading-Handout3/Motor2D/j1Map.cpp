@@ -33,7 +33,26 @@ void j1Map::Draw()
 
 	// TODO 6: Iterate all tilesets and draw all their 
 	// images in 0,0 (you should have only one tileset for now)
+	uint i = 0;
+	p2List_item<Tileset_info>* item;
+	item = tilesetList.start;
 
+	tile = new SDL_Texture*[tilesetList.count()];
+	while (item != NULL)
+	{
+		tile[i] = App->tex->Load(item->data.name.GetString());
+		i++;
+		item = item->next;
+	}
+
+	// Reset values
+	item = tilesetList.start;
+	i = 0;
+
+	// Blit
+	App->render->Blit(tile[i], 0, 0);
+
+	item = item->next;
 }
 
 // Called before quitting
@@ -97,7 +116,7 @@ bool j1Map::Load(const char* file_name)
 	{
 		// TODO 5: LOG all the data loaded
 		// iterate all tilesets and LOG everything
-		p2List_item<Tileset>* item;
+		p2List_item<Tileset_info>* item;
 		item = tilesetList.start;
 
 		while (item != NULL)
