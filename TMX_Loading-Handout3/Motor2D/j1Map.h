@@ -88,6 +88,8 @@ private:
 	p2SString			folder;
 	bool				map_loaded;
 	bool                tilesets_loaded;
+	SDL_Texture** tile;
+	bool load_texture = true;
 };
 
 #endif // __j1MAP_H__
