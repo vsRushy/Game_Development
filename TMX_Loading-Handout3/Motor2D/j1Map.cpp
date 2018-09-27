@@ -33,26 +33,7 @@ void j1Map::Draw()
 
 	// TODO 6: Iterate all tilesets and draw all their 
 	// images in 0,0 (you should have only one tileset for now)
-	uint i = 0;
-	p2List_item<Tileset_info>* item;
-	item = tilesetList.start;
 
-	tile = new SDL_Texture*[tilesetList.count()];
-	while (item != NULL)
-	{
-		tile[i] = App->tex->Load(item->data.name.GetString());
-		i++;
-		item = item->next;
-	}
-
-	// Reset values
-	item = tilesetList.start;
-	i = 0;
-
-	// Blit
-	App->render->Blit(tile[i], 0, 0);
-
-	item = item->next;
 }
 
 // Called before quitting
@@ -62,10 +43,8 @@ bool j1Map::CleanUp()
 
 	// TODO 2: Make sure you clean up any memory allocated
 	// from tilesets / map
-
-	// As we created a list of <Tileset>, we need to clean it up
-	if (tilesetList.start != nullptr)
-		tilesetList.clear();
+	if (tileset_list.start != nullptr)
+		tileset_list.clear();
 
 	tileset_info.name.Clear();
 
@@ -92,52 +71,56 @@ bool j1Map::Load(const char* file_name)
 	{
 		// TODO 3: Create and call a private function to load and fill
 		// all your map data
-		ret = LoadMap();
-	}
-
-	// TODO 5
-	if (ret == true)
-	{
-		LOG("Successfully parsed map XML file: %s", file_name);
-		LOG("width: %i height: %i", map_info.width, map_info.height);
-		LOG("tile_width: %i tile_height: %i", map_info.tile_width, map_info.tile_height);
-
-		ret = true;
+		if (LoadMap())
+		{ 
+			LOG("Successfully parsed map XML file: %s", file_name);
+			LOG("width: %i", map_info.width);
+			LOG("height: %i", map_info.height);
+			LOG("tile_width: %i", map_info.tilewidth);
+			LOG("tile_height: %i", map_info.tileheight);
+			
+			map_loaded = ret;
+		}
 	}
 
 	// TODO 4: Create and call a private function to load a tileset
 	// remember to support more any number of tilesets!
-	if (ret == true)
-	{
-		ret = LoadTileset();
-	}
 
-	if(ret == true)
+	if(map_loaded == true)
 	{
 		// TODO 5: LOG all the data loaded
 		// iterate all tilesets and LOG everything
-		p2List_item<Tileset_info>* item;
-		item = tilesetList.start;
-
-		while (item != NULL)
+		if (LoadTilesets())
 		{
-			LOG("Tileset ----");
-			LOG("name: %s firstgid: %i", item->data.name, item->data.first_gid);
-			LOG("tile width: %i tile height: %i", item->data.tile_width, item->data.tile_height);
-			LOG("spacing: %i margin: %i", item->data.spacing, item->data.margin);
+			p2List_item<Tileset_info>* item;
+			item = tileset_list.start;
 
-			item = item->next;
+			while (item != NULL)
+			{
+				LOG("Tileset ----");
+				LOG("name: %s", item->data.name.GetString());
+				LOG("firstgid: %i", item->data.first_gid);
+				LOG("tile_width: %i", item->data.tile_width);
+				LOG("tile_height: %i", item->data.tile_height);
+				LOG("spacing: %i", item->data.spacing);
+				LOG("margin: %i", item->data.margin);
+
+				item = item->next;
+			}
+
+			tilesets_loaded = ret;
 		}
 	}
 
-	map_loaded = ret;
+	tmp.Clear();
 
 	return ret;
 }
 
-// TODO 3
 bool j1Map::LoadMap()
 {
+	bool ret = true;
+
 	pugi::xml_node map = map_file.child("map");
 
 	// Checking orientation as a string
@@ -164,39 +147,37 @@ bool j1Map::LoadMap()
 
 	map_info.width = map.attribute("width").as_int();
 	map_info.height = map.attribute("height").as_int();
-	map_info.tile_width = map.attribute("tilewidth").as_int();
-	map_info.tile_height = map.attribute("tileheight").as_int();
-	map_info.next_object_id = map.attribute("nextobjectid").as_int();
+	map_info.tilewidth = map.attribute("tilewidth").as_int();
+	map_info.tileheight = map.attribute("tileheight").as_int();
+	map_info.nextobjectid = map.attribute("nextobjectid").as_int();
 
-	// We clear the temporary p2SString variables
 	temp_orientation.Clear();
 	temp_render_order.Clear();
 
-	return true;
+	return ret;
 }
 
-// TODO 4
-bool j1Map::LoadTileset()
+bool j1Map::LoadTilesets()
 {
-	for (pugi::xml_node tileset = map_file.child("map").child("tileset"); tileset; tileset = tileset.next_sibling("tileset"))
-	{
-		tileset_info.first_gid = tileset.attribute("firstgid").as_int();
-		
-		// Checking name as a string
-		p2SString temp_name = tileset.attribute("name").as_string();
+	bool ret = true;
+
+	for (pugi::xml_node tileset = map_file.child("map").child("tileset"); tileset; tileset = tileset.next_sibling("tileset")) {
+
+		tileset_info.first_gid = tileset.attribute("firstgid").as_uint();
+
+		p2SString temp_name("%s%s%s", folder.GetString(), tileset.attribute("name").as_string(), ".png");
+
 		tileset_info.name = temp_name;
 
-		tileset_info.tile_width = tileset.attribute("tilewidth").as_int();
-		tileset_info.tile_height = tileset.attribute("tileheight").as_int();
-		tileset_info.spacing = tileset.attribute("spacing").as_int();
-		tileset_info.margin = tileset.attribute("margin").as_int();
+		tileset_info.tile_width = tileset.attribute("tilewidth").as_uint();
+		tileset_info.tile_height = tileset.attribute("tileheight").as_uint();
+		tileset_info.spacing = tileset.attribute("spacing").as_uint();
+		tileset_info.margin = tileset.attribute("margin").as_uint();
 
-		// We add the loaded tileset to the list
-		tilesetList.add(tileset_info);
+		tileset_list.add(tileset_info);
 
-		// We clear the temporary p2SString variable
 		temp_name.Clear();
 	}
 
-	return true;
+	return ret;
 }
