@@ -13,17 +13,15 @@ struct MapLayer
 	p2SString name;
 	uint width = 0u;
 	uint height = 0u;
-	uint* tiles = nullptr;
-
-	~MapLayer()
-	{
-		if (tiles != nullptr)
-			delete[] tiles;  // if tiles are created with a new []; not (), the delete needs to be []
-	}
-};
+	uint* data = nullptr;
 	// TODO 6: Short function to get the value of x,y
+	inline uint Get(int x, int y) const
+	{
+		return y * width + x;
+	}
 
-
+	~MapLayer();
+};
 
 // ----------------------------------------------------
 struct TileSet
@@ -64,7 +62,7 @@ struct MapData
 	MapTypes			type;
 	p2List<TileSet*>	tilesets;
 	// TODO 2: Add a list/array of layers to the map!
-	p2List<MapLayer*> layers;
+	p2List<MapLayer*>   layers;
 };
 
 // ----------------------------------------------------

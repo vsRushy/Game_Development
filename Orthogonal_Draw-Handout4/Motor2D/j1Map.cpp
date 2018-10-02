@@ -32,7 +32,30 @@ void j1Map::Draw()
 		return;
 
 	// TODO 5: Prepare the loop to draw all tilesets + Blit
+	p2List_item<TileSet*>* draw_tilesets = data.tilesets.start;
+	while (draw_tilesets != NULL)
+	{
+		p2List_item<MapLayer*>* draw_layers = data.layers.start;
+		while (draw_layers != NULL) {
 
+			for (int i = 0; i < draw_layers->data->height; i++) {
+				for (int j = 0; j < draw_layers->data->width; j++) {
+
+					if (draw_layers->data->Get(i, j) != 0) {
+
+						SDL_Rect rect = draw_tilesets->data->GetTileRect(draw_layers->data->Get(i, j));
+						SDL_Rect* section = &rect;
+
+						iPoint world = MapToWorld(i, j);
+
+						App->render->Blit(draw_tilesets->data->texture, world.x, world.y, section);
+					}
+				}
+			}
+			draw_layers = draw_layers->next;
+		}
+		draw_tilesets = draw_tilesets->next;
+	}
 		// TODO 9: Complete the draw function
 
 }
@@ -77,14 +100,6 @@ bool j1Map::CleanUp()
 
 	// TODO 2: clean up all layer data
 	// Remove all layers
-	p2List_item<MapLayer*>* item_layer;
-	item_layer = data.layers.start;
-	
-	while (item_layer != NULL)
-	{
-		RELEASE(item->data);
-		item = item->next;
-	}
 	data.layers.clear();
 
 	// Clean up the pugui tree
@@ -135,7 +150,7 @@ bool j1Map::Load(const char* file_name)
 	// TODO 4: Iterate all layers and load each of them
 	// Load layer info ----------------------------------------------
 	pugi::xml_node layer;
-	for (layer = map_file.child("map").child("layer"); layer && ret; layer = layer.next_sibling("layer"))
+	for (layer = map_file.child("map").child("tileset"); tileset && ret; tileset = tileset.next_sibling("tile"))
 	{
 		MapLayer* set = new MapLayer();
 
@@ -143,10 +158,9 @@ bool j1Map::Load(const char* file_name)
 		{
 			ret = LoadLayer(layer, set);
 		}
-
 		data.layers.add(set);
 	}
-	
+
 	if(ret == true)
 	{
 		LOG("Successfully parsed map XML file: %s", file_name);
@@ -314,19 +328,25 @@ bool j1Map::LoadTilesetImage(pugi::xml_node& tileset_node, TileSet* set)
 bool j1Map::LoadLayer(pugi::xml_node& node, MapLayer* layer)
 {
 	bool ret = true;
+	uint i = 0;
 
-	layer->tiles = new uint[layer->width * layer->height];
+	layer->data = new uint[layer->width * layer->height];
 
 	layer->name.create(node.attribute("name").as_string());
 	layer->width = node.attribute("width").as_int();
 	layer->height = node.attribute("height").as_int();
 
-	memset(layer->tiles, 0, layer->width * layer->height * sizeof(uint));     // We set all the tiles to 0
-	
-	for (uint i = 0; i < layer->width * layer->height; i++)
+	memset(layer->data, 0, layer->width * layer->height * sizeof(uint));
+
+	for (pugi::xml_node aux = node.child("data").child("tile"); aux; aux = aux.next_sibling("tile"))
 	{
-		layer->tiles[i] = node.attribute("tiles").as_int();
+		layer->data[i++] = aux.attribute("gid").as_uint();
 	}
 
 	return ret;
+}
+
+MapLayer::~MapLayer()
+{
+	delete[] data;
 }
