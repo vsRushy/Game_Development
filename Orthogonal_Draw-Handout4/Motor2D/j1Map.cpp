@@ -31,34 +31,69 @@ void j1Map::Draw()
 	if(map_loaded == false)
 		return;
 
-
 	// TODO 5: Prepare the loop to draw all tilesets + Blit
-	/*p2List_item<TileSet*>* draw_tilesets = data.tilesets.start;
-	while (draw_tilesets != NULL)
+	p2List_item<TileSet*>* tilesetItem = data.tilesets.start;
+	p2List_item<MapLayer*>* layerItem = data.layers.start;
+
+	while (tilesetItem != NULL)
 	{
-		p2List_item<MapLayer*>* draw_layers = data.layers.start;
-		while (draw_layers != NULL) {
+		while (layerItem != NULL)
+		{
+			for (int j = 0; j < layerItem->data->height; ++j)
+			{
+				for (int i = 0; i < layerItem->data->width; ++i)
+				{
+					// get tile id
+					int tileid = layerItem->data->Get(i, j);
 
-			for (int i = 0; i < draw_layers->data->height; i++) {
-				for (int j = 0; j < draw_layers->data->width; j++) {
+					if (tileid != 0)
+					{
+						// get tile rect
+						SDL_Rect printRect = tilesetItem->data->GetTileRect(tileid);
+						iPoint printCoords = MapToWorld(i, j);
 
-					if (draw_layers->data->Get(i, j) != 0) {
-
-						SDL_Rect rect = draw_tilesets->data->GetTileRect(draw_layers->data->Get(i, j));
-						SDL_Rect* section = &rect;
-
-						iPoint world = MapToWorld(i, j);
-
-						App->render->Blit(draw_tilesets->data->texture, world.x, world.y, section);
+						App->render->Blit(tilesetItem->data->texture, printCoords.x, printCoords.y, &printRect);//, 1.0f, 45.0);
 					}
 				}
 			}
-			draw_layers = draw_layers->next;
+
+			layerItem = layerItem->next;
 		}
-		draw_tilesets = draw_tilesets->next;
+
+		tilesetItem = tilesetItem->next;
 	}
+	
+	// TODO 5: Prepare the loop to draw all tilesets + Blit
+	//p2List_item<TileSet*>* draw_tilesets = data.tilesets.start;
+	//while (draw_tilesets != NULL)
+	//{
+	//	p2List_item<MapLayer*>* draw_layers = data.layers.start;
+	//	while (draw_layers != NULL) {
+
+	//		for (int i = 0; i < draw_layers->data->height; i++) {
+	//			for (int j = 0; j < draw_layers->data->width; j++) {
+
+	//				//if (draw_layers->data->Get(i, j) != 0) {
+
+	//					SDL_Rect rect = draw_tilesets->data->GetTileRect(draw_layers->data->Get(i, j));
+	//					//SDL_Rect* section = &rect;
+
+	//					iPoint world = MapToWorld(i, j);
+
+	//					App->render->Blit(draw_tilesets->data->texture, world.x, world.y, &rect);
+	//				//}
+	//			}
+	//		}
+	//		draw_layers = draw_layers->next;
+	//	}
+	//	draw_tilesets = draw_tilesets->next;
+	//}
 		// TODO 9: Complete the draw function
-		*/
+	
+	//MapLayer* layer = data.layers.start->data;
+	//TileSet* tileset = data.tilesets.start->data;
+
+
 	
 	/**MapLayer* layer = data.layers.start->data;
 	TileSet* tileset = data.tilesets.start->data;
@@ -67,14 +102,14 @@ void j1Map::Draw()
 
 	App->render->Blit(tileset->texture, 0, 0, &rect);**/
 
-	MapLayer* layer = data.layers.start->data;
+	/*MapLayer* layer = data.layers.start->data;
 	TileSet* tileset = data.tilesets.start->data;
 
 	uint id = layer->data[0];
 
 	SDL_Rect rect = tileset->GetTileRect(id);
 
-	App->render->Blit(tileset->texture, 0, 0, &rect);
+	App->render->Blit(tileset->texture, 0, 0, &rect);*/
 }
 
 
@@ -345,8 +380,6 @@ bool j1Map::LoadTilesetImage(pugi::xml_node& tileset_node, TileSet* set)
 bool j1Map::LoadLayer(pugi::xml_node& node, MapLayer* layer)
 {
 	bool ret = true;
-	uint i = 0;
-
 	
 
 	layer->name.create(node.attribute("name").as_string());
@@ -356,15 +389,22 @@ bool j1Map::LoadLayer(pugi::xml_node& node, MapLayer* layer)
 	layer->data = new uint[layer->width * layer->height];
 
 	memset(layer->data, 0, layer->width * layer->height * sizeof(uint));
-
+	
+	uint i = 0;
 	for (pugi::xml_node aux = node.child("data").child("tile"); aux; aux = aux.next_sibling("tile"))
 	{
 		layer->data[i++] = aux.attribute("gid").as_uint();
 	}
 
-	return ret;
+	// Another option
+	/*pugi::xml_node layer_node = node.child("data").child("tile");
+	for (uint i = 0; i < layer->width * layer->height; i++)
+	{
+		layer->data[i] = layer_node.attribute("gid").as_uint();
+		layer_node = layer_node.next_sibling("tile");
+	}*/
 
-	
+	return ret;
 }
 
 MapLayer::~MapLayer()
