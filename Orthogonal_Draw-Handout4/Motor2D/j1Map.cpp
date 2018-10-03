@@ -33,7 +33,7 @@ void j1Map::Draw()
 
 
 	// TODO 5: Prepare the loop to draw all tilesets + Blit
-	p2List_item<TileSet*>* draw_tilesets = data.tilesets.start;
+	/*p2List_item<TileSet*>* draw_tilesets = data.tilesets.start;
 	while (draw_tilesets != NULL)
 	{
 		p2List_item<MapLayer*>* draw_layers = data.layers.start;
@@ -58,7 +58,23 @@ void j1Map::Draw()
 		draw_tilesets = draw_tilesets->next;
 	}
 		// TODO 9: Complete the draw function
+		*/
+	
+	/**MapLayer* layer = data.layers.start->data;
+	TileSet* tileset = data.tilesets.start->data;
+	
+	SDL_Rect rect = { 100, 100, tileset->tile_width, tileset->tile_height };
 
+	App->render->Blit(tileset->texture, 0, 0, &rect);**/
+
+	MapLayer* layer = data.layers.start->data;
+	TileSet* tileset = data.tilesets.start->data;
+
+	uint id = layer->data[0];
+
+	SDL_Rect rect = tileset->GetTileRect(id);
+
+	App->render->Blit(tileset->texture, 0, 0, &rect);
 }
 
 
