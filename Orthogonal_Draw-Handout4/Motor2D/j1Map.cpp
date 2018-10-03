@@ -31,6 +31,7 @@ void j1Map::Draw()
 	if(map_loaded == false)
 		return;
 
+
 	// TODO 5: Prepare the loop to draw all tilesets + Blit
 	p2List_item<TileSet*>* draw_tilesets = data.tilesets.start;
 	while (draw_tilesets != NULL)
@@ -150,7 +151,7 @@ bool j1Map::Load(const char* file_name)
 	// TODO 4: Iterate all layers and load each of them
 	// Load layer info ----------------------------------------------
 	pugi::xml_node layer;
-	for (layer = map_file.child("map").child("tileset"); tileset && ret; tileset = tileset.next_sibling("tile"))
+	for (layer = map_file.child("map").child("layer"); layer && ret; layer = layer.next_sibling("tile"))
 	{
 		MapLayer* set = new MapLayer();
 
@@ -330,11 +331,13 @@ bool j1Map::LoadLayer(pugi::xml_node& node, MapLayer* layer)
 	bool ret = true;
 	uint i = 0;
 
-	layer->data = new uint[layer->width * layer->height];
+	
 
 	layer->name.create(node.attribute("name").as_string());
 	layer->width = node.attribute("width").as_int();
 	layer->height = node.attribute("height").as_int();
+
+	layer->data = new uint[layer->width * layer->height];
 
 	memset(layer->data, 0, layer->width * layer->height * sizeof(uint));
 
@@ -344,6 +347,8 @@ bool j1Map::LoadLayer(pugi::xml_node& node, MapLayer* layer)
 	}
 
 	return ret;
+
+	
 }
 
 MapLayer::~MapLayer()
