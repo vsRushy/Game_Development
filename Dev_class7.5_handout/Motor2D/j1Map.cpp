@@ -39,27 +39,30 @@ void j1Map::PropagateBFS()
 {
 	// TODO 1: If frontier queue contains elements
 	// pop the last one and calculate its 4 neighbors
-	p2Queue_item<iPoint>* frontier_item = frontier.start;
-	p2List_item<iPoint>* visited_item = visited.start;
-
-	while(frontier_item != nullptr)
+	if (frontier.Count() > 0)
 	{
-		iPoint current = frontier_item->data;
-		
-		for (visited_item->data; visited_item; visited_item->next)
+		iPoint last_point = frontier.GetLast()->data;  // Save the point
+		frontier.Pop(last_point);                      // Then pop it (we need to only store it)
+
+		p2Queue<iPoint> temp_queue;
+		temp_queue.Push({ last_point.x - 1, last_point.y });  // Left neighbour
+		temp_queue.Push({ last_point.x + 1, last_point.y });  // Right neighbour
+		temp_queue.Push({ last_point.x, last_point.y - 1, }); // Top neighbour
+		temp_queue.Push({ last_point.x, last_point.y + 1, }); // Bottom neighbour
+
+		// TODO 2: For each neighbor, if not visited, add it
+		// to the frontier queue and visited list
+		for (p2Queue_item<iPoint>* neighbour_queue = temp_queue.start; neighbour_queue; neighbour_queue = neighbour_queue->next)
 		{
-			if ()
+			if (visited.find(neighbour_queue->data) == -1) // returns -1 if not found
 			{
-				frontier.Push(current);
+				frontier.Push(neighbour_queue->data);
+				visited.add(neighbour_queue->data);
 			}
 		}
 
-		frontier_item = frontier_item->next;
+		temp_queue.Clear();
 	}
-
-	// TODO 2: For each neighbor, if not visited, add it
-	// to the frontier queue and visited list
-
 }
 
 void j1Map::DrawBFS()
