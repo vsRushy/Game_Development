@@ -79,8 +79,10 @@ void j1Map::DrawBFS()
 
 		SDL_Rect r = tileset->GetTileRect(26);
 		iPoint pos = MapToWorld(point.x, point.y);
-
-		App->render->Blit(tileset->texture, pos.x, pos.y, &r);
+		if (IsWalkable(point.x, point.y))
+		{
+			App->render->Blit(tileset->texture, pos.x, pos.y, &r);
+		}
 
 		item = item->next;
 	}
@@ -93,17 +95,31 @@ void j1Map::DrawBFS()
 
 		SDL_Rect r = tileset->GetTileRect(25);
 		iPoint pos = MapToWorld(point.x, point.y);
-
-		App->render->Blit(tileset->texture, pos.x, pos.y, &r);
+		if (IsWalkable(point.x, point.y))
+		{
+			App->render->Blit(tileset->texture, pos.x, pos.y, &r);
+		}
 	}
-
 }
 
 bool j1Map::IsWalkable(int x, int y) const
 {
+	bool ret = false;
 	// TODO 3: return true only if x and y are within map limits
 	// and the tile is walkable (tile id 0 in the navigation layer)
-	return true;
+	p2List_item<MapLayer*>* layer_item;
+	for (layer_item = data.layers.start; layer_item; layer_item = layer_item->next)
+	{
+		if (layer_item->data->name == "Colisions" && layer_item != nullptr)
+		{
+			if (x < data.width && x >= 0 && y < data.height && y >= 0 && layer_item->data->Get(x, y) == 0)
+			{
+				ret = true;
+			}
+		}
+	}
+
+	return ret;
 }
 
 void j1Map::Draw()
