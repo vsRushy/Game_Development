@@ -39,9 +39,27 @@ void j1Map::PropagateBFS()
 {
 	// TODO 1: If frontier queue contains elements
 	// pop the last one and calculate its 4 neighbors
+	p2Queue_item<iPoint>* frontier_item = frontier.start;
+	p2List_item<iPoint>* visited_item = visited.start;
+
+	while(frontier_item != nullptr)
+	{
+		iPoint current = frontier_item->data;
+		
+		for (visited_item->data; visited_item; visited_item->next)
+		{
+			if ()
+			{
+				frontier.Push(current);
+			}
+		}
+
+		frontier_item = frontier_item->next;
+	}
 
 	// TODO 2: For each neighbor, if not visited, add it
 	// to the frontier queue and visited list
+
 }
 
 void j1Map::DrawBFS()
