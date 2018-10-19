@@ -106,7 +106,7 @@ bool j1Map::IsWalkable(int x, int y) const
 	p2List_item<MapLayer*>* layer_item;
 	for (layer_item = data.layers.start; layer_item; layer_item = layer_item->next)
 	{
-		if (layer_item->data->name == "Colisions" && layer_item != nullptr)
+		if (layer_item->data->properties.Get("Navigation") == 1)
 		{
 			if (x < data.width && x >= 0 && y < data.height && y >= 0 && layer_item->data->Get(x, y) == 0)
 			{
