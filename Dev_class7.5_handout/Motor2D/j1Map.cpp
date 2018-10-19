@@ -31,8 +31,8 @@ void j1Map::ResetBFS()
 {
 	frontier.Clear();
 	visited.clear();
-	frontier.Push(iPoint(19, 4));
-	visited.add(iPoint(19, 4));
+	frontier.Push(starting_point);
+	visited.add(starting_point);
 }
 
 void j1Map::PropagateBFS()
