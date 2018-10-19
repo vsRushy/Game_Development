@@ -54,7 +54,7 @@ void j1Map::PropagateBFS()
 		// to the frontier queue and visited list
 		for (p2Queue_item<iPoint>* neighbour_queue = temp_queue.start; neighbour_queue; neighbour_queue = neighbour_queue->next)
 		{
-			if (visited.find(neighbour_queue->data) == -1) // returns -1 if not found
+			if (visited.find(neighbour_queue->data) == -1 && IsWalkable(neighbour_queue->data.x, neighbour_queue->data.y)) // returns -1 if not found
 			{
 				frontier.Push(neighbour_queue->data);
 				visited.add(neighbour_queue->data);
@@ -79,10 +79,8 @@ void j1Map::DrawBFS()
 
 		SDL_Rect r = tileset->GetTileRect(26);
 		iPoint pos = MapToWorld(point.x, point.y);
-		if (IsWalkable(point.x, point.y))
-		{
-			App->render->Blit(tileset->texture, pos.x, pos.y, &r);
-		}
+			
+		App->render->Blit(tileset->texture, pos.x, pos.y, &r);
 
 		item = item->next;
 	}
@@ -95,10 +93,8 @@ void j1Map::DrawBFS()
 
 		SDL_Rect r = tileset->GetTileRect(25);
 		iPoint pos = MapToWorld(point.x, point.y);
-		if (IsWalkable(point.x, point.y))
-		{
-			App->render->Blit(tileset->texture, pos.x, pos.y, &r);
-		}
+		
+		App->render->Blit(tileset->texture, pos.x, pos.y, &r);
 	}
 }
 
