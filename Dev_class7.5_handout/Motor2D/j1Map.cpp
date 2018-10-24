@@ -31,35 +31,38 @@ void j1Map::ResetBFS()
 {
 	frontier.Clear();
 	visited.clear();
-	frontier.Push(iPoint(19, 4));
-	visited.add(iPoint(19, 4));
+	frontier.Push(starting_point);
+	visited.add(starting_point);
 }
 
 void j1Map::PropagateBFS()
 {
 	// TODO 1: If frontier queue contains elements
 	// pop the last one and calculate its 4 neighbors
-	p2Queue_item<iPoint>* frontier_item = frontier.start;
-	p2List_item<iPoint>* visited_item = visited.start;
-
-	while(frontier_item != nullptr)
+	if (frontier.Count() > 0)
 	{
-		iPoint current = frontier_item->data;
-		
-		for (visited_item->data; visited_item; visited_item->next)
+		iPoint last_point = frontier.GetLast()->data;  // Save the point
+		frontier.Pop(last_point);                      // Then pop it (we need to only store it)
+
+		p2Queue<iPoint> temp_queue;
+		temp_queue.Push({ last_point.x - 1, last_point.y });  // Left neighbour
+		temp_queue.Push({ last_point.x + 1, last_point.y });  // Right neighbour
+		temp_queue.Push({ last_point.x, last_point.y - 1, }); // Top neighbour
+		temp_queue.Push({ last_point.x, last_point.y + 1, }); // Bottom neighbour
+
+		// TODO 2: For each neighbor, if not visited, add it
+		// to the frontier queue and visited list
+		for (p2Queue_item<iPoint>* neighbour_queue = temp_queue.start; neighbour_queue; neighbour_queue = neighbour_queue->next)
 		{
-			if ()
+			if (visited.find(neighbour_queue->data) == -1 && IsWalkable(neighbour_queue->data.x, neighbour_queue->data.y)) // returns -1 if not found
 			{
-				frontier.Push(current);
+				frontier.Push(neighbour_queue->data);
+				visited.add(neighbour_queue->data);
 			}
 		}
 
-		frontier_item = frontier_item->next;
+		temp_queue.Clear();
 	}
-
-	// TODO 2: For each neighbor, if not visited, add it
-	// to the frontier queue and visited list
-
 }
 
 void j1Map::DrawBFS()
@@ -76,7 +79,7 @@ void j1Map::DrawBFS()
 
 		SDL_Rect r = tileset->GetTileRect(26);
 		iPoint pos = MapToWorld(point.x, point.y);
-
+			
 		App->render->Blit(tileset->texture, pos.x, pos.y, &r);
 
 		item = item->next;
@@ -90,17 +93,29 @@ void j1Map::DrawBFS()
 
 		SDL_Rect r = tileset->GetTileRect(25);
 		iPoint pos = MapToWorld(point.x, point.y);
-
+		
 		App->render->Blit(tileset->texture, pos.x, pos.y, &r);
 	}
-
 }
 
 bool j1Map::IsWalkable(int x, int y) const
 {
+	bool ret = false;
 	// TODO 3: return true only if x and y are within map limits
 	// and the tile is walkable (tile id 0 in the navigation layer)
-	return true;
+	p2List_item<MapLayer*>* layer_item;
+	for (layer_item = data.layers.start; layer_item; layer_item = layer_item->next)
+	{
+		if (layer_item->data->properties.Get("Navigation") == 1)
+		{
+			if (x < data.width && x >= 0 && y < data.height && y >= 0 && layer_item->data->Get(x, y) == 0)
+			{
+				ret = true;
+			}
+		}
+	}
+
+	return ret;
 }
 
 void j1Map::Draw()

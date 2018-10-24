@@ -152,6 +152,9 @@ private:
 	/// BFS
 	p2Queue<iPoint>		frontier;
 	p2List<iPoint>		visited;
+
+	iPoint starting_point = { 19, 4 };
+	iPoint finishing_point = { 7, 7 };
 };
 
 #endif // __j1MAP_H__
