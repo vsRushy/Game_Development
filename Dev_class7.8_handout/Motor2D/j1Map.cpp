@@ -47,7 +47,7 @@ void j1Map::ResetPath()
 void j1Map::Path(int x, int y)
 {
 	path.Clear();
-	iPoint goal = WorldToMap(x, y);
+	goal = WorldToMap(x, y);
 
 	// TODO 2: Follow the breadcrumps to goal back to the origin
 	// add each step into "path" dyn array (it will then draw automatically)
@@ -71,24 +71,30 @@ void j1Map::PropagateDijkstra()
 	iPoint curr;
 	if (frontier.Pop(curr))
 	{
-		iPoint neighbors[4];
+		if (curr == goal)
+			stop = true;
 
-		neighbors[0].create(curr.x + 1, curr.y + 0);
-		neighbors[1].create(curr.x + 0, curr.y + 1);
-		neighbors[2].create(curr.x - 1, curr.y + 0);
-		neighbors[3].create(curr.x + 0, curr.y - 1);
-
-		for (uint i = 0; i < 4; ++i)
+		if (!stop)
 		{
-			if (visited.find(neighbors[i]) == -1)
-			{
-				if (MovementCost(neighbors[i].x, neighbors[i].y) >= 0)
-				{
-					cost_so_far[neighbors[i].x][neighbors[i].y] = MovementCost(neighbors[i].x, neighbors[i].y);
+			iPoint neighbors[4];
 
-					frontier.Push(neighbors[i], cost_so_far[neighbors[i].x][neighbors[i].y]);
-					visited.add(neighbors[i]);
-					breadcrumbs.add(curr);
+			neighbors[0].create(curr.x + 1, curr.y + 0);
+			neighbors[1].create(curr.x + 0, curr.y + 1);
+			neighbors[2].create(curr.x - 1, curr.y + 0);
+			neighbors[3].create(curr.x + 0, curr.y - 1);
+
+			for (uint i = 0; i < 4; ++i)
+			{
+				if (visited.find(neighbors[i]) == -1)
+				{
+					if (MovementCost(neighbors[i].x, neighbors[i].y) >= 0)
+					{
+						cost_so_far[neighbors[i].x][neighbors[i].y] = MovementCost(neighbors[i].x, neighbors[i].y);
+
+						frontier.Push(neighbors[i], cost_so_far[neighbors[i].x][neighbors[i].y]);
+						visited.add(neighbors[i]);
+						breadcrumbs.add(curr);
+					}
 				}
 			}
 		}
