@@ -69,6 +69,7 @@ void j1Map::PropagateDijkstra()
 	// use the 2 dimensional array "cost_so_far" to track the accumulated costs
 	// on each cell (is already reset to 0 automatically)
 	iPoint curr;
+	uint new_cost;
 	if (frontier.Pop(curr))
 	{
 		if (curr == goal)
@@ -85,16 +86,12 @@ void j1Map::PropagateDijkstra()
 
 			for (uint i = 0; i < 4; ++i)
 			{
-				if (visited.find(neighbors[i]) == -1)
+				new_cost = cost_so_far[curr.x][curr.y] + MovementCost(neighbors[i].x, neighbors[i].y);
+				if (cost_so_far[neighbors[i].x][neighbors[i].y] == 0 || new_cost < cost_so_far[curr.x][curr.y])
 				{
-					if (MovementCost(neighbors[i].x, neighbors[i].y) >= 0)
-					{
-						cost_so_far[neighbors[i].x][neighbors[i].y] = MovementCost(neighbors[i].x, neighbors[i].y);
-
-						frontier.Push(neighbors[i], cost_so_far[neighbors[i].x][neighbors[i].y]);
-						visited.add(neighbors[i]);
-						breadcrumbs.add(curr);
-					}
+					cost_so_far[neighbors[i].x][neighbors[i].y] = new_cost;
+					frontier.Push(neighbors[i], new_cost);
+					breadcrumbs.add(curr);
 				}
 			}
 		}
