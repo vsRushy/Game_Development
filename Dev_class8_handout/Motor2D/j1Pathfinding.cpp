@@ -176,8 +176,6 @@ int j1PathFinding::CreatePath(const iPoint& origin, const iPoint& destination)
 	else
 	{
 		// TODO 2: Create two lists: open, close
-		
-		
 		PathList open;
 		PathList close;
 		// Add the origin tile to open
@@ -194,7 +192,14 @@ int j1PathFinding::CreatePath(const iPoint& origin, const iPoint& destination)
 			// TODO 4: If we just added the destination, we are done!
 			// Backtrack to create the final path
 			// Use the Pathnode::parent and Flip() the path when you are finish
+			if (close.list.end->data.pos == destination)
+			{
+				// backtracking
+				for (p2List_item<PathNode>* it = close.list.end; it->data.parent != nullptr; it = )
+				{
 
+				}
+			}
 
 			// TODO 5: Fill a list of all adjancent nodes
 
