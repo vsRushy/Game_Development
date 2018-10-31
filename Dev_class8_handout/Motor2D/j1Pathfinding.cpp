@@ -1,7 +1,7 @@
 #include "p2Defs.h"
 #include "p2Log.h"
 #include "j1App.h"
-#include "j1PathFinding.h"
+#include "j1Pathfinding.h"
 
 j1PathFinding::j1PathFinding() : j1Module(), map(NULL), last_path(DEFAULT_PATH_LENGTH),width(0), height(0)
 {
@@ -167,44 +167,46 @@ int PathNode::CalculateF(const iPoint& destination)
 // ----------------------------------------------------------------------------------
 int j1PathFinding::CreatePath(const iPoint& origin, const iPoint& destination)
 {
+	int ret = -1;
 	// TODO 1: if origin or destination are not walkable, return -1
 	if (!IsWalkable(origin) || !IsWalkable(destination))
 	{
-		return -1;
+		ret = -1;
 	}
-
-	// TODO 2: Create two lists: open, close
-	// Add the origin tile to open
-	// Iterate while we have tile in the open list
-	PathList open;
-	PathList close;
-
-	open.list.start->data.pos = origin;
-	p2List_item<PathNode>* open_item = open.list.start;
-	while (open_item != nullptr)
+	else
 	{
-		open.list.add(open_item->data);
-		open_item = open_item->next;
+		// TODO 2: Create two lists: open, close
+		
+		
+		PathList open;
+		PathList close;
+		// Add the origin tile to open
+		PathNode origin_tile(0, origin.DistanceTo(destination), origin, nullptr);
+		open.list.add(origin_tile);
+		// Iterate while we have tile (1 or more than 1) in the open list
+		while (open.list.count() > 0)
+		{
+			// TODO 3: Move the lowest score cell from open list to the closed list
+			p2List_item<PathNode>* current_node = open.GetNodeLowestScore();
+			close.list.add(current_node->data);
+			open.list.del(current_node);
+
+			// TODO 4: If we just added the destination, we are done!
+			// Backtrack to create the final path
+			// Use the Pathnode::parent and Flip() the path when you are finish
+
+
+			// TODO 5: Fill a list of all adjancent nodes
+
+			// TODO 6: Iterate adjancent nodes:
+			// ignore nodes in the closed list
+			// If it is NOT found, calculate its F and add it to the open list
+			// If it is already in the open list, check if it is a better path (compare G)
+			// If it is a better path, Update the parent
+
+		}
 	}
 
-	// TODO 3: Move the lowest score cell from open list to the closed list
-	open_item = open.GetNodeLowestScore();
-	close.list.add(open_item->data);
-	open.list.del(open_item);
-
-	// TODO 4: If we just added the destination, we are done!
-	// Backtrack to create the final path
-	// Use the Pathnode::parent and Flip() the path when you are finish
-
-
-	// TODO 5: Fill a list of all adjancent nodes
-
-	// TODO 6: Iterate adjancent nodes:
-	// ignore nodes in the closed list
-	// If it is NOT found, calculate its F and add it to the open list
-	// If it is already in the open list, check if it is a better path (compare G)
-	// If it is a better path, Update the parent
-
-	return -1;
+	return ret;
 }
 
