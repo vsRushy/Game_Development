@@ -191,16 +191,18 @@ int j1PathFinding::CreatePath(const iPoint& origin, const iPoint& destination)
 
 			// TODO 4: If we just added the destination, we are done!
 			// Backtrack to create the final path
-			// Use the Pathnode::parent and Flip() the path when you are finish
-			if (close.list.end->data.pos == destination)
+			if (current_node->data.pos == destination)
 			{
 				// backtracking
-				for (p2List_item<PathNode>* it = close.list.end; it->data.parent != nullptr; it = )
+				for (const p2List_item<PathNode>* it = close.list.end; it->data.parent != nullptr; it = close.Find(it->data.pos))
 				{
-
+					last_path.PushBack(it->data.pos);
 				}
+				// Use the Pathnode::parent and Flip() the path when you are finish
+				last_path.Flip();
+				ret = last_path.Count();
 			}
-
+			
 			// TODO 5: Fill a list of all adjancent nodes
 
 			// TODO 6: Iterate adjancent nodes:
