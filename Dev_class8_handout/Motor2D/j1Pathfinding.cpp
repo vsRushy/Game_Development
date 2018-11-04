@@ -199,18 +199,45 @@ int j1PathFinding::CreatePath(const iPoint& origin, const iPoint& destination)
 					last_path.PushBack(it->data.pos);
 				}
 				// Use the Pathnode::parent and Flip() the path when you are finish
+				last_path.PushBack(close.list.start->data.pos);
 				last_path.Flip();
 				ret = last_path.Count();
 			}
-			
-			// TODO 5: Fill a list of all adjancent nodes
+			else
+			{
+				// TODO 5: Fill a list of all adjancent nodes
+				PathList neighbours;
+				close.list.end->data.FindWalkableAdjacents(neighbours);
 
-			// TODO 6: Iterate adjancent nodes:
-			// ignore nodes in the closed list
-			// If it is NOT found, calculate its F and add it to the open list
-			// If it is already in the open list, check if it is a better path (compare G)
-			// If it is a better path, Update the parent
+				// TODO 6: Iterate adjancent nodes:
+				p2List_item<PathNode>* it = neighbours.list.start;
 
+				while (it != nullptr)
+				{
+					// ignore nodes in the closed list
+					if (close.Find(it->data.pos) != NULL)
+					{
+						// It is in the closed list, so we ignore it
+						it = it->next;
+					}
+
+					// If it is NOT found, calculate its F and add it to the open list
+					it->data.CalculateF(destination);
+					open.list.add(it->data);
+
+					if (open.Find(it->data.pos) != NULL)
+					{
+						// ...
+					}
+
+					it = it->next;
+				}
+				
+				// If it is already in the open list, check if it is a better path (compare G)
+				// If it is a better path, Update the parent
+
+				neighbours.list.clear();
+			}
 		}
 	}
 
