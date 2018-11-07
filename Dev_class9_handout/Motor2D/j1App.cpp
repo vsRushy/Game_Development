@@ -21,6 +21,8 @@
 // Constructor
 j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 {
+	perf_timer.Start();
+
 	input = new j1Input();
 	win = new j1Window();
 	render = new j1Render();
@@ -70,6 +72,8 @@ void j1App::AddModule(j1Module* module)
 // Called before render is available
 bool j1App::Awake()
 {
+	perf_timer.Start();
+
 	pugi::xml_document	config_file;
 	pugi::xml_node		config;
 	pugi::xml_node		app_config;
@@ -107,6 +111,8 @@ bool j1App::Awake()
 // Called before the first frame
 bool j1App::Start()
 {
+	perf_timer.Start();
+
 	bool ret = true;
 	p2List_item<j1Module*>* item;
 	item = modules.start;
@@ -180,12 +186,12 @@ void j1App::FinishUpdate()
 	// Amount of ms took the last update
 	// Amount of frames during the last second
 
-	float avg_fps = 0.0f;
-	float seconds_since_startup = timer.ReadSec();
-	float dt = 0.0f;
-	uint32 last_frame_ms = 0;
-	uint32 frames_on_last_update = 0;
-	uint64 frame_count = 0;
+	seconds_since_startup = timer.ReadSec();
+	frame_count++;
+	dt = perf_timer.ReadMs() / frame_count;
+	avg_fps = frame_count / timer.ReadSec();
+	last_frame_ms = 0;
+	frames_on_last_update = 0;
 
 	static char title[256];
 	sprintf_s(title, 256, "Av.FPS: %.2f Last Frame Ms: %02u Last sec frames: %i Last dt: %.3f Time since startup: %.3f Frame Count: %lu ",
@@ -262,6 +268,8 @@ bool j1App::PostUpdate()
 // Called before quitting
 bool j1App::CleanUp()
 {
+	perf_timer.Start();
+
 	bool ret = true;
 	p2List_item<j1Module*>* item;
 	item = modules.end;
