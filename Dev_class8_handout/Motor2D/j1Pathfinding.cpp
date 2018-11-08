@@ -179,7 +179,7 @@ int j1PathFinding::CreatePath(const iPoint& origin, const iPoint& destination)
 		PathList open;
 		PathList close;
 		// Add the origin tile to open
-		PathNode origin_tile(0, origin.DistanceTo(destination), origin, nullptr);
+		PathNode origin_tile(0, origin.DistanceNoSqrt(destination), origin, nullptr);
 		open.list.add(origin_tile);
 		// Iterate while we have tile (1 or more than 1) in the open list
 		while (open.list.count() > 0)
@@ -194,12 +194,15 @@ int j1PathFinding::CreatePath(const iPoint& origin, const iPoint& destination)
 			if (current_node->data.pos == destination)
 			{
 				// backtracking
-				for (const p2List_item<PathNode>* it = close.list.end; it->data.parent != nullptr; it = close.Find(it->data.pos))
+				for (const p2List_item<PathNode>* it = close.list.end; it->data.parent != nullptr; it = close.Find(it->data.parent->pos))
 				{
 					last_path.PushBack(it->data.pos);
+					if (it->data.parent == nullptr)
+					{
+						last_path.PushBack(close.list.start->data.pos);
+					}
 				}
 				// Use the Pathnode::parent and Flip() the path when you are finish
-				last_path.PushBack(close.list.start->data.pos);
 				last_path.Flip();
 				ret = last_path.Count();
 			}
@@ -219,22 +222,29 @@ int j1PathFinding::CreatePath(const iPoint& origin, const iPoint& destination)
 					{
 						// It is in the closed list, so we ignore it
 						it = it->next;
+						continue;
 					}
-
-					// If it is NOT found, calculate its F and add it to the open list
-					it->data.CalculateF(destination);
-					open.list.add(it->data);
-
-					if (open.Find(it->data.pos) != NULL)
+					// If it is already in the open list, check if it is a better path (compare G)
+					else if (open.Find(it->data.pos) != NULL)
 					{
-						// ...
+						PathNode temp_path = open.Find(it->data.pos)->data;
+						it->data.CalculateF(destination);
+
+						// If it is a better path, Update the parent
+						if (temp_path.g > it->data.g)
+						{
+							temp_path.parent = it->data.parent;
+						}
+					}
+					// If it is NOT found, calculate its F and add it to the open list
+					else
+					{
+						it->data.CalculateF(destination);
+						open.list.add(it->data);
 					}
 
 					it = it->next;
 				}
-				
-				// If it is already in the open list, check if it is a better path (compare G)
-				// If it is a better path, Update the parent
 
 				neighbours.list.clear();
 			}
