@@ -167,6 +167,8 @@ int PathNode::CalculateF(const iPoint& destination)
 // ----------------------------------------------------------------------------------
 int j1PathFinding::CreatePath(const iPoint& origin, const iPoint& destination)
 {
+	last_path.Clear();
+
 	int ret = -1;
 	// TODO 1: if origin or destination are not walkable, return -1
 	if (!IsWalkable(origin) || !IsWalkable(destination))
