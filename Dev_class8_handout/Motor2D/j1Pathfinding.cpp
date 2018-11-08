@@ -181,6 +181,7 @@ int j1PathFinding::CreatePath(const iPoint& origin, const iPoint& destination)
 		// Add the origin tile to open
 		PathNode origin_tile(0, origin.DistanceNoSqrt(destination), origin, nullptr);
 		open.list.add(origin_tile);
+		
 		// Iterate while we have tile (1 or more than 1) in the open list
 		while (open.list.count() > 0)
 		{
@@ -191,7 +192,7 @@ int j1PathFinding::CreatePath(const iPoint& origin, const iPoint& destination)
 
 			// TODO 4: If we just added the destination, we are done!
 			// Backtrack to create the final path
-			if (current_node->data.pos == destination)
+			if (close.list.end->data.pos == destination)
 			{
 				// backtracking
 				for (const p2List_item<PathNode>* it = close.list.end; it->data.parent != nullptr; it = close.Find(it->data.parent->pos))
@@ -228,7 +229,6 @@ int j1PathFinding::CreatePath(const iPoint& origin, const iPoint& destination)
 					else if (open.Find(it->data.pos) != NULL)
 					{
 						PathNode temp_path = open.Find(it->data.pos)->data;
-						it->data.CalculateF(destination);
 
 						// If it is a better path, Update the parent
 						if (temp_path.g > it->data.g)
