@@ -97,6 +97,9 @@ private:
 	p2SString			title;
 	p2SString			organization;
 
+	uint32 framerate_cap;
+	float freq;
+
 	mutable bool		want_to_save = false;
 	bool				want_to_load = false;
 	p2SString			load_game;
