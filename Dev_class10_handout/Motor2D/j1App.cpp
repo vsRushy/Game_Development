@@ -204,10 +204,13 @@ void j1App::FinishUpdate()
 			  avg_fps, last_frame_ms, frames_on_last_update, seconds_since_startup, frame_count);
 	App->win->SetTitle(title);
 
+	freq_read.Start(); // before SDL_Delay() !!!
+
 	// TODO 2: Use SDL_Delay to make sure you get your capped framerate
 	SDL_Delay(freq - last_frame_ms);
 
 	// TODO 3: Measure accurately the amount of time it SDL_Delay actually waits compared to what was expected
+	LOG("We waited for %f milliseconds and got back	in %f", freq_read.ReadMs(), freq - last_frame_ms);
 }
 
 // Call modules before each loop iteration
