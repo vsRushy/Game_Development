@@ -114,6 +114,9 @@ private:
 	uint32				prev_last_sec_frame_count = 0;
 
 	j1PerfTimer         freq_read;
+	j1PerfTimer         frame_ms_read;
+
+	float dt;
 };
 
 extern j1App* App; // No student is asking me about that ... odd :-S
