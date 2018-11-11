@@ -167,11 +167,13 @@ pugi::xml_node j1App::LoadConfig(pugi::xml_document& config_file) const
 // ---------------------------------------------
 void j1App::PrepareUpdate()
 {
+	PERF_START(ptimer); // before SDL_Delay() !!!
+
 	frame_count++;
 	last_sec_frame_count++;
 
 	// TODO 4: Calculate the dt: differential time since last frame
-	frame_ms_read.Start();
+	dt = 1.0f / avg_fps;
 
 	frame_time.Start();
 }
@@ -194,24 +196,22 @@ void j1App::FinishUpdate()
 		last_sec_frame_count = 0;
 	}
 
-	float avg_fps = float(frame_count) / startup_time.ReadSec();
+	avg_fps = float(frame_count) / startup_time.ReadSec();
 	float seconds_since_startup = startup_time.ReadSec();
 	uint32 last_frame_ms = frame_time.Read();
 	uint32 frames_on_last_update = prev_last_sec_frame_count;
 
 	static char title[256];
-	sprintf_s(title, 256, "Av.FPS: %.2f Last Frame Ms: %02u Last sec frames: %i  Time since startup: %.3f Frame Count: %lu ",
+	sprintf_s(title, 256, "Av.FPS: %.2f Last Frame Ms: %02u Last sec frames: %i  Time since startup: %.3f Frame Count: %lu Delta Time: %.3f ",
 			  avg_fps, last_frame_ms, frames_on_last_update, seconds_since_startup, frame_count);
 	App->win->SetTitle(title);
-
-	freq_read.Start(); // before SDL_Delay() !!!
 
 	// TODO 2: Use SDL_Delay to make sure you get your capped framerate
 	freq = 1000.0f / (float)framerate_cap;
 	time_to_wait = freq - (float)last_frame_ms;
 	SDL_Delay(time_to_wait);
 
-	time_actually_waited = freq_read.ReadMs();
+	time_actually_waited = ptimer.ReadMs();
 
 	// TODO 3: Measure accurately the amount of time it SDL_Delay actually waits compared to what was expected
 	LOG("We waited for %f milliseconds and got back	in %f", time_to_wait, time_actually_waited);
