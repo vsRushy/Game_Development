@@ -97,21 +97,21 @@ private:
 	p2SString			title;
 	p2SString			organization;
 
-	uint32 framerate_cap;
-	float freq;
-
 	mutable bool		want_to_save = false;
 	bool				want_to_load = false;
 	p2SString			load_game;
 	mutable p2SString	save_game;
 
 	j1PerfTimer			ptimer;
-	uint64				frame_count = 0;
+	uint64				frame_count = 0u;
 	j1Timer				startup_time;
 	j1Timer				frame_time;
 	j1Timer				last_sec_frame_time;
-	uint32				last_sec_frame_count = 0;
-	uint32				prev_last_sec_frame_count = 0;
+	uint32				last_sec_frame_count = 0u;
+	uint32				prev_last_sec_frame_count = 0u;
+
+	uint32 framerate_cap;
+	float freq;
 
 	float time_to_wait;
 	float time_actually_waited;

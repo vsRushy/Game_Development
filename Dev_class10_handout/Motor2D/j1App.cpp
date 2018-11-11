@@ -167,7 +167,7 @@ pugi::xml_node j1App::LoadConfig(pugi::xml_document& config_file) const
 // ---------------------------------------------
 void j1App::PrepareUpdate()
 {
-	PERF_START(ptimer); // before SDL_Delay() !!!
+	PERF_START(ptimer);
 
 	frame_count++;
 	last_sec_frame_count++;
@@ -299,6 +299,7 @@ bool j1App::CleanUp()
 	}
 
 	PERF_PEEK(ptimer);
+
 	return ret;
 }
 
