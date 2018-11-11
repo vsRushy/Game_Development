@@ -87,7 +87,7 @@ bool j1App::Awake()
 		organization.create(app_config.child("organization").child_value());
 
 		// TODO 1: Read from config file your framerate cap
-		framerate_cap = config.child("app").attribute("framerate_cap").as_int();
+		framerate_cap = config.child("app").attribute("framerate_cap").as_uint();
 	}
 
 	if(ret == true)
@@ -101,8 +101,6 @@ bool j1App::Awake()
 			item = item->next;
 		}
 	}
-
-	freq = 1.0f / (float)framerate_cap * 1000.0f;
 
 	PERF_PEEK(ptimer);
 
@@ -209,10 +207,14 @@ void j1App::FinishUpdate()
 	freq_read.Start(); // before SDL_Delay() !!!
 
 	// TODO 2: Use SDL_Delay to make sure you get your capped framerate
-	SDL_Delay(freq - last_frame_ms);
+	freq = 1000.0f / (float)framerate_cap;
+	time_to_wait = freq - (float)last_frame_ms;
+	SDL_Delay(time_to_wait);
+
+	time_actually_waited = freq_read.ReadMs();
 
 	// TODO 3: Measure accurately the amount of time it SDL_Delay actually waits compared to what was expected
-	LOG("We waited for %f milliseconds and got back	in %f", freq_read.ReadMs(), freq - last_frame_ms);
+	LOG("We waited for %f milliseconds and got back	in %f", time_to_wait, time_actually_waited);
 }
 
 // Call modules before each loop iteration

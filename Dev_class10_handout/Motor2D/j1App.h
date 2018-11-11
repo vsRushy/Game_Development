@@ -116,6 +116,8 @@ private:
 	j1PerfTimer         freq_read;
 	j1PerfTimer         frame_ms_read;
 
+	float time_to_wait;
+	float time_actually_waited;
 	float dt;
 };
 
