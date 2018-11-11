@@ -202,7 +202,7 @@ void j1App::FinishUpdate()
 	uint32 frames_on_last_update = prev_last_sec_frame_count;
 
 	static char title[256];
-	sprintf_s(title, 256, "Av.FPS: %.2f Last Frame Ms: %02u Last sec frames: %i  Time since startup: %.3f Frame Count: %lu Delta Time: %.3f ",
+	sprintf_s(title, 256, "Av.FPS: %.2f Last Frame Ms: %02u Last sec frames: %i  Time since startup: %.3f Frame Count: %lu ",
 			  avg_fps, last_frame_ms, frames_on_last_update, seconds_since_startup, frame_count);
 	App->win->SetTitle(title);
 
@@ -212,7 +212,6 @@ void j1App::FinishUpdate()
 	SDL_Delay(time_to_wait);
 
 	time_actually_waited = ptimer.ReadMs();
-
 	// TODO 3: Measure accurately the amount of time it SDL_Delay actually waits compared to what was expected
 	LOG("We waited for %f milliseconds and got back	in %f", time_to_wait, time_actually_waited);
 }
