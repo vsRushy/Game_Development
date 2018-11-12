@@ -201,8 +201,6 @@ void j1App::FinishUpdate()
 	uint32 last_frame_ms = frame_time.Read();
 	uint32 frames_on_last_update = prev_last_sec_frame_count;
 
-	
-
 	// TODO 2: Use SDL_Delay to make sure you get your capped framerate
 	freq = 1000.0f / (float)framerate_cap;
 	time_to_wait = freq - (float)last_frame_ms;
