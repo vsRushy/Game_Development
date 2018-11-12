@@ -201,10 +201,7 @@ void j1App::FinishUpdate()
 	uint32 last_frame_ms = frame_time.Read();
 	uint32 frames_on_last_update = prev_last_sec_frame_count;
 
-	static char title[256];
-	sprintf_s(title, 256, "Av.FPS: %.2f Last Frame Ms: %02u Dt: %f Last sec frames: %i Time since startup: %.3f Frame Count: %lu ",
-			  avg_fps, last_frame_ms, dt, frames_on_last_update, seconds_since_startup, frame_count);
-	App->win->SetTitle(title);
+	
 
 	// TODO 2: Use SDL_Delay to make sure you get your capped framerate
 	freq = 1000.0f / (float)framerate_cap;
@@ -212,8 +209,14 @@ void j1App::FinishUpdate()
 	SDL_Delay(time_to_wait);
 
 	time_actually_waited = ptimer.ReadMs();
+
 	// TODO 3: Measure accurately the amount of time it SDL_Delay actually waits compared to what was expected
-	LOG("We waited for %f milliseconds and got back	in %f", time_to_wait, time_actually_waited);
+	//LOG("We waited for %f milliseconds and got back	in %f", time_to_wait, time_actually_waited);
+
+	static char title[256];
+	sprintf_s(title, 256, "Av.FPS: %.2f Last Frame Ms: %02u Dt: %f Last sec frames: %i Time since startup: %.3f Frame Count: %lu ",
+		avg_fps, last_frame_ms, dt, frames_on_last_update, seconds_since_startup, frame_count);
+	App->win->SetTitle(title);
 }
 
 // Call modules before each loop iteration
