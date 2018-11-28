@@ -3,10 +3,26 @@
 
 #include "j1Module.h"
 
+#include "p2DynArray.h"
+
+#include "SDL/include/SDL_rect.h"
+
 #define CURSOR_WIDTH 2
 
-// TODO 1: Create your structure of classes
+enum class UI_ELEMENT_TYPE
+{
+	UI_BUTTON,
+	UI_LABEL,
+	UI_IMAGE,
+	UI_CHECKBOX,
+	UI_TEXTBOX
+};
 
+struct SDL_Texture;
+struct Collider;
+
+// TODO 1: Create your structure of classes
+class UIElement;
 // ---------------------------------------------------
 class j1Gui : public j1Module
 {
@@ -23,11 +39,8 @@ public:
 	// Call before first frame
 	bool Start();
 
-	// Called before all Updates
-	bool PreUpdate();
-
-	// Called after all Updates
-	bool PostUpdate();
+	// Update
+	bool Update(float dt);
 
 	// Called before quitting
 	bool CleanUp();
@@ -37,9 +50,16 @@ public:
 
 	const SDL_Texture* GetAtlas() const;
 
-private:
+public:
+	UIElement* CreateUIElement(iPoint pos, UI_ELEMENT_TYPE type, SDL_Rect area);
+	/*void DeleteUIElement(UIElement* ui_element);
+	void DeleteAllUIElements();
+	void OnCollision(Collider*, Collider*);*/
 
-	SDL_Texture* atlas;
+private:
+	p2DynArray<UIElement*> ui_elements = NULL;
+
+	SDL_Texture* atlas = nullptr;
 	p2SString atlas_file_name;
 };
 

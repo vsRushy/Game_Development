@@ -44,7 +44,9 @@ bool j1Scene::Start()
 
 	debug_tex = App->tex->Load("maps/path2.png");
 
+	iPoint test(100, 100);
 	// TODO 3: Create the banner (rect {485, 829, 328, 103}) and the text "Hello World"
+	image_test = (UIImage*)App->gui->CreateUIElement(test, UI_ELEMENT_TYPE::UI_IMAGE, { 485, 829, 328, 103 });
 
 	return true;
 }

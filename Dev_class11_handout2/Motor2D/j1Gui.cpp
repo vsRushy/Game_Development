@@ -7,6 +7,11 @@
 #include "j1Input.h"
 #include "j1Gui.h"
 
+#include "SDL/include/SDL_render.h"
+
+#include "UIElement.h"
+#include "UIImage.h"
+
 j1Gui::j1Gui() : j1Module()
 {
 	name.create("gui");
@@ -35,15 +40,16 @@ bool j1Gui::Start()
 	return true;
 }
 
-// Update all guis
-bool j1Gui::PreUpdate()
+// Update guis
+bool j1Gui::Update(float dt)
 {
-	return true;
-}
+	for (uint i = 0; i < ui_elements.Count(); ++i)
+		if (ui_elements[i] != nullptr) ui_elements[i]->Update(dt);
 
-// Called after all Updates
-bool j1Gui::PostUpdate()
-{
+	for (uint i = 0; i < ui_elements.Count(); ++i)
+		if (ui_elements[i] != nullptr && ui_elements[i]->type == UI_ELEMENT_TYPE::UI_IMAGE)
+			ui_elements[i]->Draw(atlas);
+
 	return true;
 }
 
@@ -63,3 +69,21 @@ const SDL_Texture* j1Gui::GetAtlas() const
 
 // class Gui ---------------------------------------------------
 
+UIElement* j1Gui::CreateUIElement(iPoint pos, UI_ELEMENT_TYPE type, SDL_Rect area)
+{
+	UIElement* ret = nullptr;
+
+	switch (type)
+	{
+	case UI_ELEMENT_TYPE::UI_IMAGE:
+		ret = new UIImage(pos);
+		break;
+	default:
+		break;
+	}
+
+	if (ret != nullptr)
+		ui_elements.PushBack(ret);
+
+	return ret;
+}
